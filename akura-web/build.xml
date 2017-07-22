@@ -1,0 +1,312 @@
+<?xml version="1.0"?>
+
+<project name="akura-web" basedir="." default="build">
+
+	<property file="build.properties" />
+
+	<property name="akura.base.dir" location="${basedir}" />
+	<property name="src.dir" value="java/src" />
+	<property name="src.config.dir" value="java/config" />
+	<property name="build.dir" value="build" />
+	<property name="dist.dir" value="dist" />
+	<property name="lib.dir" value="lib" />
+	<property name="temp.lib.dir" value="templib" />
+	<property name="common.api.dist.dir" value="../common-api/dist" />
+	<property name="common.api.lib.dir" value="../common-api/lib" />
+	<property name="common.util.dist.dir" value="../common-util/dist" />
+	<property name="common.util.lib.dir" value="../common-util/lib" />
+	<property name="common.service.dist.dir" value="../common-service/dist" />
+	<property name="common.service.lib.dir" value="../common-service/lib" />
+	<property name="auditing.service.dist.dir" value="../auditing-service/dist" />
+	<property name="auditing.service.lib.dir" value="../auditing-service/lib" />
+	<property name="staff.service.dist.dir" value="../staff-service/dist" />
+	<property name="student.service.dist.dir" value="../student-service/dist" />
+	<property name="school.service.dist.dir" value="../school-service/dist" />
+	<property name="reporting.service.dist.dir" value="../reporting-service/dist" />
+	<property name="attendance.service.dist.dir" value="../attendance-service/dist" />
+	<property name="attendance.service.lib.dir" value="../attendance-service/lib" />
+	<property name="src.build.dir" value="${build.dir}/classes" />
+	<property name="framework.home" value="../" />
+	<property name="war.dir" value="war" />
+	<property name="name" value="akura" />
+	<property name="checkstyle.report.path" value="${basedir}/reports/checkstyle" />
+
+	<!-- Params for compiling the test cases -->
+	<property name="test.src.dir" value="test/src" />
+	<property name="test.config.dir" value="test/config" />
+	<property name="test.build.dir" value="${build.dir}/test-classes" />
+
+	<!-- properties related to, Emma and JUnit  -->
+	<property name="reports.dir" value="${basedir}/reports" />
+	<property name="emma.dir" value="${reports.dir}/emma" />
+	<property name="emma.html.dir" value="${emma.dir}/html" />
+	<property name="emma.classes.dir" value="${emma.dir}/classes" />
+	<property name="junit.report.dir" value="${reports.dir}/junit" />
+	<property name="junit.html.dir" value="${junit.report.dir}/html" />
+
+
+	<path id="master-classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+
+		<fileset dir="${temp.lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement path="${src.build.dir}" />
+	</path>
+
+	<!-- include the build of the common api -->
+	<macrodef name="commons">
+		<attribute name="target" default="build" />
+		<sequential>
+			<ant antfile="${framework.home}/common-api/build.xml" dir="${framework.home}/common-api" target="@{target}" />
+			<ant antfile="${framework.home}/common-util/build.xml" dir="${framework.home}/common-util" target="@{target}" />
+			<ant antfile="${framework.home}/common-service/build.xml" dir="${framework.home}/common-service" target="@{target}" />
+			<ant antfile="${framework.home}/auditing-service/build.xml" dir="${framework.home}/auditing-service" target="@{target}" />
+			<ant antfile="${framework.home}/staff-service/build.xml" dir="${framework.home}/staff-service" target="@{target}" />
+			<ant antfile="${framework.home}/student-service/build.xml" dir="${framework.home}/student-service" target="@{target}" />
+			<ant antfile="${framework.home}/school-service/build.xml" dir="${framework.home}/school-service" target="@{target}" />
+			<ant antfile="${framework.home}/reporting-service/build.xml" dir="${framework.home}/reporting-service" target="@{target}" />
+			<ant antfile="${framework.home}/attendance-service/build.xml" dir="${framework.home}/attendance-service" target="@{target}" />
+		</sequential>
+	</macrodef>
+
+	<target name="copyDependencies" description="copy the dependencies from common api project">
+		<echo message="copy dependancies     --> akura web" />
+		<commons target="build" />
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${common.api.dist.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${common.api.lib.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${common.util.dist.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${common.util.lib.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${common.service.dist.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${common.service.lib.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${auditing.service.dist.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${auditing.service.lib.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${staff.service.dist.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${student.service.dist.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${school.service.dist.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${reporting.service.dist.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${attendance.service.dist.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${attendance.service.lib.dir}" />
+		</copy>
+
+	</target>
+
+
+	<!--Cleaning the  -->
+	<target name="clean" description="clean up">
+		<echo message="clean     --> akura web" />
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${war.dir}" />
+		<delete dir="${basedir}/reports" />
+
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.lib.dir}" excludes="**/.svn" />
+		</delete>
+	</target>
+
+	<target name="cleanAll" depends="clean" description="clean up">
+		<echo message="clean     --> akura projects" />
+		<commons target="clean" />
+	</target>
+
+	<!-- Creates build, dist and other child directories with in them -->
+	<target name="prepare" depends="clean">
+		<echo message="prepare     --> akura web" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${src.build.dir}" />
+		<mkdir dir="${dist.dir}" />
+
+		<mkdir dir="${test.build.dir}" />
+		<mkdir dir="${reports.dir}" />
+		<mkdir dir="${emma.dir}" />
+		<mkdir dir="${emma.html.dir}" />
+		<mkdir dir="${emma.classes.dir}" />
+		<mkdir dir="${junit.report.dir}" />
+		<mkdir dir="${junit.html.dir}" />
+	</target>
+
+	<target name="build" depends="prepare,copyDependencies" description="Compile source code and create the jar file">
+		<echo message="build     --> Build the application - akura web" />
+
+		<javac destdir="${src.build.dir}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<src path="${src.dir}" />
+			<classpath refid="master-classpath" />
+		</javac>
+	</target>
+
+	<target name="buildwar" depends="build" description="Compile main source tree java files">
+		<mkdir dir="${war.dir}/WEB-INF/classes" />
+		<mkdir dir="${war.dir}/WEB-INF/lib" />
+		<mkdir dir="${war.dir}/jsp" />
+
+		<copy todir="${war.dir}">
+			<fileset dir="${akura.base.dir}/web" />
+		</copy>
+
+		<copy todir="${war.dir}/WEB-INF/lib">
+			<fileset dir="${lib.dir}" >
+			<exclude name="emma_ant.jar"/>
+			<exclude name="emma.jar"/>
+			</fileset>
+		</copy>
+
+		<copy todir="${war.dir}/WEB-INF/lib">
+			<fileset dir="${temp.lib.dir}">
+				<include name="*.jar" />
+				<exclude name="junit.jar"/>
+				<exclude name="emma_ant.jar"/>
+				<exclude name="emma.jar"/>
+			</fileset>
+		</copy>
+
+		<copy todir="${war.dir}/WEB-INF/classes">
+			<fileset dir="${temp.lib.dir}">
+				<include name="*.properties" />
+			</fileset>
+		</copy>
+
+		<echo message="copying binaries to war" />
+		<copy todir="${war.dir}/WEB-INF/classes">
+			<fileset dir="${src.build.dir}" />
+		</copy>
+
+		<copy todir="${war.dir}/WEB-INF/classes">
+			<fileset dir="${src.config.dir}" />
+		</copy>
+
+		<copy todir="${war.dir}/WEB-INF/classes/hibernate">
+			<fileset dir="${temp.lib.dir}/hibernate" />
+		</copy>
+
+		<copy todir="${war.dir}/WEB-INF/classes/spring-beans">
+			<fileset dir="${temp.lib.dir}/spring-beans" />
+		</copy>
+
+		<war destfile="${dist.dir}/${name}.war" webxml="${war.dir}/WEB-INF/web.xml">
+			<fileset dir="${war.dir}">
+				<include name="**/*.*" />
+			</fileset>
+		</war>
+
+	</target>
+
+	<target name="deploywar" depends="buildwar" description="Deploy application as a WAR file">
+
+		<copy todir="${deploy.path}" preservelastmodified="true">
+			<fileset dir="${dist.dir}">
+				<include name="*.war" />
+			</fileset>
+		</copy>
+	</target>
+
+	<target name="checkstyle">
+		<commons target="checkstyle" />
+		<echo message="checkstyle     --> akura web" />
+		<taskdef name="checkstyle" classpath="${basedir}/../common-config/code-quality-tools/checkstyle/bin/checkstyle-all-4.3.jar" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" />
+		<property name="checkstyle.report.path" value="${basedir}/reports/checkstyle" />
+		<property name="checkstyle.report.name" value="akura-web-checkstyle-report" />
+		<property name="checkstyle.xml.report.file.name" value="${checkstyle.report.name}.xml" />
+		<property name="checkstyle.html.report.file.name" value="${checkstyle.report.name}.html" />
+
+		<mkdir dir="${checkstyle.report.path}" />
+		<checkstyle config="${basedir}/../common-config/code-quality-config/SMSCheckStyle.xml" failOnViolation="false">
+			<fileset dir="${src.dir}" includes="**/*.java" />
+			<formatter type="xml" toFile="${checkstyle.report.path}/${checkstyle.xml.report.file.name}" />
+		</checkstyle>
+
+		<xslt in="${checkstyle.report.path}/${checkstyle.xml.report.file.name}" out="${checkstyle.report.path}/${checkstyle.html.report.file.name}" style="${basedir}/../common-config/code-quality-tools/checkstyle/checkstyle-html.xsl" />
+	</target>
+
+	<!-- Compile the JUnit test classes -->
+	<target name="test" depends="build">
+		<javac srcdir="${test.src.dir}" destdir="${test.build.dir}" debug="true">
+			<classpath refid="master-classpath" />
+		</javac>
+
+		<!-- Begin emma block -->
+		<taskdef resource="emma_ant.properties" classpathref="master-classpath" />
+
+		<!-- Instrument the .class files. -->
+		<emma enabled="true">
+			<instr instrpath="${src.build.dir}" destdir="${emma.classes.dir}" metadatafile="${emma.dir}/metadata.emma" merge="true" mode="overwrite">
+			</instr>
+		</emma>
+
+		<!-- End emma block -->
+
+		<!-- Run JUnit Test Cases -->
+		<junit printsummary="true" fork="yes">
+			<formatter type="xml" />
+			<batchtest todir="${junit.report.dir}">
+				<fileset dir="${test.src.dir}" includes="**/*Test.java" excludes="**/BaseWebTest.java" />
+			</batchtest>
+
+			<classpath>
+				<path refid="master-classpath" />
+				<path path="${test.build.dir}" />
+				<path path="${src.config.dir}" />
+				<path path="${temp.lib.dir}" />
+			</classpath>
+
+			<jvmarg value="-Demma.coverage.out.file=${emma.dir}/coverage.emma" />
+			<jvmarg value="-Demma.coverage.out.merge=true" />
+		</junit>
+
+		<!-- Generates HTML reports for the test -->
+
+		<junitreport todir="${junit.report.dir}">
+			<fileset dir="${junit.report.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${junit.html.dir}" />
+
+		</junitreport>
+
+		<!-- Begin emma block -->
+		<!-- Generate Emma reports. -->
+		<emma enabled="true">
+			<report sourcepath="${src.dir}" depth="method">
+				<infileset dir="${emma.dir}">
+					<include name="*.emma" />
+					<include name="*.ec" />
+				</infileset>
+
+				<xml outfile="${emma.dir}/coverage.xml" />
+				<html outfile="${emma.html.dir}/index.html" />
+			</report>
+		</emma>
+
+		<!-- End emma block -->
+
+	</target>
+</project>

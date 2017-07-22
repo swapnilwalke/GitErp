@@ -1,0 +1,35 @@
+--
+-- Select the AKURA DataBase
+--
+USE `akura`;
+
+--
+-- Copy new Section Descriptions in to Section table from Section_Head table 
+--
+INSERT INTO `SECTION`(`DESCRIPTION`) 
+	SELECT DISTINCT `SECTION_HEAD`.`SECTION` FROM `SECTION_HEAD` 
+	WHERE `SECTION_HEAD`.`SECTION` NOT IN(SELECT `SECTION`.`DESCRIPTION` FROM `SECTION`)AND `SECTION_HEAD`.`SECTION`!='';
+
+--
+-- Add the new column (SECTION_ID) to Section_Head table
+--
+ALTER TABLE `SECTION_HEAD` ADD COLUMN `SECTION_ID` INT(11) NULL DEFAULT NULL,   
+  ADD CONSTRAINT `fk_SECTION_HEAD_1`
+  FOREIGN KEY (`SECTION_ID` )
+  REFERENCES `SECTION` (`SECTION_ID` )
+  ON DELETE RESTRICT
+  ON UPDATE CASCADE ;
+
+--
+-- insert SECTION_IDs to relevant sections in the Section_Head table
+--
+UPDATE `SECTION_HEAD`,`SECTION`
+	SET `SECTION_HEAD`.`SECTION_ID`=`SECTION`.`SECTION_ID`
+	WHERE `SECTION`.`DESCRIPTION` = `SECTION_HEAD`.`SECTION`;
+
+--
+-- drop the column SECTION from Section_Head table
+--
+ALTER TABLE `SECTION_HEAD`
+	DROP COLUMN `SECTION`;
+

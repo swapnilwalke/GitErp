@@ -1,0 +1,191 @@
+<?xml version="1.0"?>
+
+<project name="student-service" basedir="." default="build">
+
+	<property name="sms.base.dir" location="${basedir}" />
+	<property name="src.dir" value="java/src" />
+	<property name="src.config.dir" value="java/config" />
+	<property name="build.dir" value="build" />
+	<property name="dist.dir" value="dist" />
+	<property name="lib.dir" value="lib" />
+	<property name="temp.lib.dir" value="templib" />
+	<property name="common.api.dist.dir" value="../common-api/dist" />
+	<property name="common.api.lib.dir" value="../common-api/lib" />
+	<property name="common.util.dist.dir" value="../common-util/dist" />
+	<property name="common.util.lib.dir" value="../common-util/lib" />
+	<property name="common.service.dist.dir" value="../common-service/dist" />
+	<property name="common.service.lib.dir" value="../common-service/lib" />
+	<property name="src.build.dir" value="${build.dir}/classes" />
+	<property name="framework.home" value="../" />
+	<property name="checkstyle.report.path" value="${basedir}/reports/checkstyle" />
+
+	<!-- Params for compiling the test cases -->
+	<property name="test.src.dir" value="test/src" />
+	<property name="test.config.dir" value="test/config" />
+	<property name="test.build.dir" value="${build.dir}/test-classes" />
+
+	<!-- properties related to, Emma and JUnit  -->
+	<property name="reports.dir" value="${basedir}/reports" />
+	<property name="emma.dir" value="${reports.dir}/emma" />
+	<property name="emma.html.dir" value="${emma.dir}/html" />
+	<property name="emma.classes.dir" value="${emma.dir}/classes" />
+	<property name="junit.report.dir" value="${reports.dir}/junit" />
+	<property name="junit.html.dir" value="${junit.report.dir}/html" />
+
+	<path id="master-classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<fileset dir="${temp.lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement path="${src.build.dir}" />
+	</path>
+
+	<!--Cleaning the  -->
+	<target name="clean" description="clean up">
+		<echo message="clean     --> student service" />
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${basedir}/reports" />
+
+		<delete includeemptydirs="true">
+			<fileset dir="${temp.lib.dir}" excludes="**/.svn" />
+		</delete>
+	</target>
+
+	<!-- Creates build, dist and other child directories with in them -->
+	<target name="prepare" depends="clean">
+		<echo message="prepare     --> student service" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${src.build.dir}" />
+		<mkdir dir="${dist.dir}" />
+
+		<mkdir dir="${test.build.dir}" />
+		<mkdir dir="${reports.dir}" />
+		<mkdir dir="${emma.dir}" />
+		<mkdir dir="${emma.html.dir}" />
+		<mkdir dir="${emma.classes.dir}" />
+		<mkdir dir="${junit.report.dir}" />
+		<mkdir dir="${junit.html.dir}" />
+	</target>
+
+	<target name="copyDependencies" description="copy the dependencies from common api project">
+		<echo message="copy dependancies     --> student service" />
+
+		<!-- copy dependencies from api and util -->
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${common.api.dist.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${common.api.lib.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${common.util.dist.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${common.util.lib.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${common.service.dist.dir}" />
+		</copy>
+		<copy todir="${temp.lib.dir}">
+			<fileset dir="${common.service.lib.dir}" />
+		</copy>
+	</target>
+
+
+	<target name="build" depends="prepare,copyDependencies" description="Compile source code and create the jar file">
+		<echo message="build     --> Build the application - student service" />
+
+		<javac destdir="${src.build.dir}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<src path="${src.dir}" />
+			<classpath refid="master-classpath" />
+		</javac>
+		<jar destfile="${dist.dir}/student-service.jar" basedir="${src.build.dir}" />
+		<copy todir="${dist.dir}/spring-beans">
+			<fileset dir="${src.config.dir}/spring-beans" />
+		</copy>
+	</target>
+
+	<target name="checkstyle">
+
+		<echo message="checkstyle     --> student service" />
+		<taskdef name="checkstyle" classpath="${basedir}/../common-config/code-quality-tools/checkstyle/bin/checkstyle-all-4.3.jar" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" />
+		<property name="checkstyle.report.path" value="${basedir}/reports/checkstyle" />
+		<property name="checkstyle.report.name" value="student-service-checkstyle-report" />
+		<property name="checkstyle.xml.report.file.name" value="${checkstyle.report.name}.xml" />
+		<property name="checkstyle.html.report.file.name" value="${checkstyle.report.name}.html" />
+
+		<mkdir dir="${checkstyle.report.path}" />
+		<checkstyle config="${basedir}/../common-config/code-quality-config/SMSCheckStyle.xml" failOnViolation="false">
+			<fileset dir="${src.dir}" includes="**/*.java" />
+			<formatter type="xml" toFile="${checkstyle.report.path}/${checkstyle.xml.report.file.name}" />
+		</checkstyle>
+
+		<xslt in="${checkstyle.report.path}/${checkstyle.xml.report.file.name}" out="${checkstyle.report.path}/${checkstyle.html.report.file.name}" style="${basedir}/../common-config/code-quality-tools/checkstyle/checkstyle-html.xsl" />
+	</target>
+
+	<!-- Compile the JUnit test classes -->
+	<target name="test" depends="build">
+		<javac srcdir="${test.src.dir}" destdir="${test.build.dir}" debug="true">
+			<classpath refid="master-classpath" />
+		</javac>
+
+		<!-- Begin emma block -->
+		<taskdef resource="emma_ant.properties" classpathref="master-classpath" />
+
+		<!-- Instrument the .class files. -->
+		<emma enabled="true">
+			<instr instrpath="${src.build.dir}" destdir="${emma.classes.dir}" metadatafile="${emma.dir}/metadata.emma" merge="true" mode="overwrite">
+			</instr>
+		</emma>
+
+		<!-- End emma block -->
+
+		<!-- Run JUnit Test Cases -->
+		<junit printsummary="true" fork="yes">
+			<formatter type="xml" />
+			<batchtest todir="${junit.report.dir}">
+				<fileset dir="${test.src.dir}" includes="**/*Test.java" excludes="**/BaseStudentTest.java" />
+			</batchtest>
+
+			<classpath>
+				<path refid="master-classpath" />
+				<path path="${test.build.dir}" />
+				<path path="${src.config.dir}" />
+				<path path="${temp.lib.dir}" />
+			</classpath>
+
+			<jvmarg value="-Demma.coverage.out.file=${emma.dir}/coverage.emma" />
+			<jvmarg value="-Demma.coverage.out.merge=true" />
+		</junit>
+
+		<!-- Generates HTML reports for the test -->
+
+		<junitreport todir="${junit.report.dir}">
+			<fileset dir="${junit.report.dir}">
+				<include name="TEST-*.xml" />
+			</fileset>
+			<report format="frames" todir="${junit.html.dir}" />
+
+		</junitreport>
+
+		<!-- Begin emma block -->
+		<!-- Generate Emma reports. -->
+		<emma enabled="true">
+			<report sourcepath="${src.dir}" depth="method">
+				<infileset dir="${emma.dir}">
+					<include name="*.emma" />
+					<include name="*.ec" />
+				</infileset>
+
+				<xml outfile="${emma.dir}/coverage.xml" />
+				<html outfile="${emma.html.dir}/index.html" />
+			</report>
+		</emma>
+
+		<!-- End emma block -->
+
+	</target>
+</project>

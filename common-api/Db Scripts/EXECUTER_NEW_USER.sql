@@ -1,0 +1,2 @@
+\. akura2.6/EXECUTER_NEW_USER.sql
+\. EXECUTER_AKURA_2.6_USER.sql

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="java/src"/>
+	<classpathentry kind="src" path="test/src"/>
+	<classpathentry kind="src" path="java/config"/>
+	<classpathentry kind="lib" path="lib/jstl.jar"/>
+	<classpathentry kind="lib" path="lib/standard.jar"/>
+	<classpathentry kind="lib" path="/common-api/lib/org.springframework.web-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="/common-service/lib/org.springframework.context-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/commons-collections-3.1.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry kind="lib" path="/common-util/lib/servlet-api-2.3.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/common-api"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/common-service"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/common-util"/>
+	<classpathentry kind="lib" path="/common-api/lib/log4j-1.2.6.jar"/>
+	<classpathentry kind="lib" path="/common-util/lib/velocity-1.6.4.jar"/>
+	<classpathentry kind="lib" path="/common-service/lib/org.springframework.context.support-3.0.5.RELEASE.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/staff-service"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/student-service"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/attendance-service"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/reporting-service"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/school-service"/>
+	<classpathentry kind="lib" path="/common-api/lib/org.springframework.beans-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="/common-api/lib/org.springframework.transaction-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="/common-api/lib/spring-security-core-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="/common-api/lib/org.springframework.core-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="lib/org.springframework.web.servlet-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="/common-api/lib/commons-logging.jar"/>
+	<classpathentry kind="lib" path="/common-api/lib/org.springframework.asm-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="/common-api/lib/org.springframework.expression-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="/common-api/lib/mysql-connector-java-5.1.7-bin.jar"/>
+	<classpathentry kind="lib" path="/common-api/lib/jta-1.1.jar"/>
+	<classpathentry kind="lib" path="/common-api/lib/dom4j-1.6.1.jar"/>
+	<classpathentry kind="lib" path="/common-api/lib/slf4j-api-1.6.1.jar"/>
+	<classpathentry kind="lib" path="/common-api/lib/javax.persistence.jar"/>
+	<classpathentry kind="lib" path="lib/iText-2.1.7.jar"/>
+	<classpathentry kind="lib" path="lib/mockito-all-1.9.0.jar"/>
+	<classpathentry kind="lib" path="/common-service/lib/org.springframework.test-3.0.5.RELEASE.jar"/>
+	<classpathentry kind="lib" path="/common-service/lib/junit.jar"/>
+	<classpathentry kind="lib" path="/common-util/lib/jasperreports-3.7.3.jar"/>
+	<classpathentry kind="lib" path="lib/commons-lang-2.4.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/auditing-service"/>
+	<classpathentry kind="var" path="FINDBUGS_ANNOTATIONS"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

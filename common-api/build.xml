@@ -1,0 +1,103 @@
+<?xml version="1.0"?>
+
+<project name="common-api" basedir="." default="build">
+
+	<property name="sms.base.dir" location="${basedir}" />
+	<property name="src.dir" value="java/src" />
+	<property name="config.dir" value="java/config" />
+	<property name="src.config.dir" value="java/config" />
+	<property name="test.dir" value="test/src" />
+	<property name="build.dir" value="build" />
+	<property name="dist.dir" value="dist" />
+	<property name="lib.dir" value="lib" />
+	<property name="src.build.dir" value="${build.dir}/classes" />
+
+	<property name="report.path" value="${basedir}/reports" />
+	<property name="checkstyle.report.path" value="${report.path}/checkstyle" />
+	<property name="findbugs.report.path" value="${report.path}/findbugs" />
+
+	<path id="master-classpath">
+		<fileset dir="${lib.dir}">
+			<include name="*.jar" />
+		</fileset>
+		<pathelement path="${src.build.dir}" />
+	</path>
+
+	<target name="clean" description="clean up">
+		<echo message="Clean     --> common api" />
+		<delete dir="${build.dir}" />
+		<delete dir="${dist.dir}" />
+		<delete dir="${report.path}" />
+	</target>
+
+	<!-- Creates build, dist and other child directories with in them -->
+	<target name="prepare" depends="clean">
+		<echo message="Prepare     --> common api" />
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${src.build.dir}" />
+		<mkdir dir="${dist.dir}" />
+	</target>
+
+
+	<target name="build" depends="prepare" description="Compile source code and create the jar file">
+		<echo message="build     --> Build the application - common api" />
+		<javac destdir="${src.build.dir}" source="1.5" target="1.5" debug="true" deprecation="false" optimize="false" failonerror="true">
+			<src path="${src.dir}" />
+			<classpath refid="master-classpath" />
+		</javac>
+		<jar destfile="${dist.dir}/common-api.jar" basedir="${src.build.dir}" />
+
+		<copy todir="${dist.dir}">
+			<fileset dir="${config.dir}" />
+		</copy>
+	</target>
+
+	<target name="checkstyle">
+
+		<echo message="checkstyle     --> common api" />
+
+		<taskdef name="checkstyle" classpath="${basedir}/../common-config/code-quality-tools/checkstyle/bin/checkstyle-all-4.3.jar" classname="com.puppycrawl.tools.checkstyle.CheckStyleTask" />
+
+		<property name="checkstyle.report.path" value="${basedir}/reports/checkstyle" />
+		<property name="checkstyle.report.name" value="common-api-checkstyle-report" />
+		<property name="checkstyle.xml.report.file.name" value="${checkstyle.report.name}.xml" />
+		<property name="checkstyle.html.report.file.name" value="${checkstyle.report.name}.html" />
+
+		<mkdir dir="${checkstyle.report.path}" />
+
+		<checkstyle config="${basedir}/../common-config/code-quality-config/SMSCheckStyle.xml" failOnViolation="false">
+			<fileset dir="${src.dir}" includes="**/*.java" />
+			<formatter type="xml" toFile="${checkstyle.report.path}/${checkstyle.xml.report.file.name}" />
+		</checkstyle>
+
+		<xslt in="${checkstyle.report.path}/${checkstyle.xml.report.file.name}" out="${checkstyle.report.path}/${checkstyle.html.report.file.name}" style="${basedir}/../common-config/code-quality-tools/checkstyle/checkstyle-html.xsl" />
+	</target>
+
+
+
+	<target name="findbugs" depends="build">
+
+		<echo message="find bugs     --> common api" />
+
+		<mkdir dir="${findbugs.report.path}" />
+
+		<property name="findbugs.home" value="${basedir}/../common-config/code-quality-tools/findbugs" />
+		<property name="findbugs.xsl.file" value="${findbugs.home}/findbugs-html.xsl" />
+		<property name="findbugs.report.name" value="common-api-findbug" />
+		<property name="findbugs.xml.report.file.name" value="${findbugs.report.name}.xml" />
+		<property name="findbugs.html.report.file.name" value="${findbugs.report.name}.html" />
+		<property name="findbugs.report.path" value="${findbugs.report.name}.html" />
+
+		<taskdef name="findbugs" classname="edu.umd.cs.findbugs.anttask.FindBugsTask" classpath="${findbugs.home}/bin/findbugs-ant.jar" />
+
+		<findbugs home="${findbugs.home}/bin" reportLevel="low" output="xml:withMessages" timeout="1200000" jvmargs="-Xms256m -Xmx512m -XX:PermSize=512m -XX:MaxPermSize=768m" outputFile="${findbugs.report.path}/${findbugs.xml.report.file.name}">
+			<sourcePath path="${src.dir}" />
+			<class location="${build.dir}" />
+		</findbugs>
+
+		<xslt in="${findbugs.report.path}/${findbugs.xml.report.file.name}" out="${findbugs.report.path}/${findbugs.html.report.file.name}" style="${findbugs.xsl.file}" />
+	</target>
+
+	<target name="reports" depends="findbugs,checkstyle" />
+
+</project>

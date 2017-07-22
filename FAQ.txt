@@ -1,0 +1,140 @@
+﻿Àkura FAQ
+---------
+ 
+1. Can I use a different MySQL version other than MySQL server 5.5?
+ 
+    -You can use only MySQL server 5.5 or a higher version.
+ 
+2. Can I use different versions of Java and Tomcat other than the specified versions in ReadMe file?
+    - applicationThe application has been fully tested only with the specified versions given in the ReadMe file.
+ 
+3. Do I need to set the environment variables (JAVA_HOME, CATALINA_HOME) to setup the application?
+    - it is not required for installation. But if you checkout the source code from Sourceforge.net and build the application, then you need to setup the JAVA_HOME, ANT_HOME and append JAVA_HOME\bin, ANT_HOME\bin to the `path` environment variable.
+     
+4. I installed Tomcat, but not as a service. Then how can I start Tomcat after I restart my PC?
+ 
+    - You can start Tomcat by executing the tomcat\bin\startup.bat file.
+ 
+5. I'm getting an error like "Access is denied; Unable to open the service tomcat7" in Windows7. 
+How do I solve this?
+ 
+    I. Right click 'tomcat7w.exe' which is in the bin folder of the Tomcat installation.
+   II. Select 'Properties'.
+   II. Then in 'Compatibility' tab, under 'Privilege Level', select the 'Run this program as an administrator' option.
+ 
+6. Can I have more than one Tomcat server on a single machine?
+    - Yes you can, but make sure that both servers are configured properly.
+ 
+7. Can I execute the db executers in MySQL Workbench?
+    - No you cannot.
+ 
+8. How do I execute the db executer with the MySQL command-line tool?
+ 
+    - The executer has paths configured relative to SQL scripts. Therefore, first you need to change the path to the base directory of the db scripts folder. From there, you need to start the MySQL command-line tool. Then you can run the executor with no issues.
+ 
+    E.g.:
+        c:\windows>cd c:\akura\Db Scripts
+        c:\akura\Db Scripts>mysql -u root -p root
+        mysql>\. EXECUTER_NEW_USER.sql
+ 
+9. How do I setup the database without using the db executor?
+    - If you are not using the db executor, execute the SQL scripts one-by-one in the following order:
+     
+        alpha/SMS_TABLES.sql
+        alpha/SMS_VIEWS.sql
+        alpha/SMS_STUDENT_ADVANCE_SEARCH_SP.sql
+        alpha/SMS_DEFAULT_DATA.sql    
+        beta1.0/AKURA_TABLES.sql
+        beta1.0/AKURA_VIEWS.sql
+        beta1.0/AKURA_DEFAULT_DATA.sql
+        beta1.1/AKURA_TABLES.sql
+        beta1.1/AKURA_VIEWS.sql
+        akura2.0/AKURA_TABLES.sql
+        akura2.0/AKURA_VIEWS.sql
+        akura2.0/AKURA_DEFAULT_DATA.sql
+        akura2.0/SMS_STUDENT_ADVANCE_SEARCH_SP.sql
+        akura2.0/SP_STUDENT_EXAM_MARK.sql
+        akura2.0/SP_LANGUAGE_ID_TO_STUDY_MEDIUM_MIGRATION.sql
+        akura2.0/AKURA_DEFAULT_DATA_USER_PRVILEGES.sql
+        akura2.1/AKURA_TABLES.sql
+        akura2.1/AKURA_VIEWS.sql
+        akura2.1/AKURA_DEFAULT_DATA.sql
+        akura2.1/SP_STUDENT_EXAM_MARK.sql
+        akura2.1/AKURA_DEFAULT_DATA_USER_PRVILEGES.sql
+	akura2.2/AKURA_TABLES.sql
+	akura2.2/AKURA_VIEWS.sql
+	akura2.2/AKURA_DEFAULT_DATA.sql
+	akura2.2/SP_STUDENT_EXAM_MARK.sql
+	akura2.3/AKURA_TABLES.sql
+	akura2.3/AKURA_VIEWS.sql
+	akura2.3/AKURA_DEFAULT_DATA_USER_PRVILEGES.sql
+	akura2.3/FAITH_LIFE_GRADING_FIX.sql
+	akura2.3/SECTION_HEAD_INTEGRATION_FIX.sql
+	akura2.4/STUDENT_STATUS_FIX.sql
+	akura2.4/STAFF_LEAVE_TYPE_INTEGRATION.sql
+	akura2.4/AKURA_TABLES.sql
+	akura2.4/AKURA_VIEWS.sql
+	akura2.4/AKURA_DEFAULT_DATA_USER_PRVILEGES.sql
+	akura2.4/AKURA_STUDENT_ADVANCE_SEARCH_SP.sql
+	akura2.4/SP_STUDENT_EXAM_MARK.sql
+	akura2.4/AKURA_DEFAULT_DATA.sql
+	akura2.4/METHOD_OF_TRAVEL_FIX.sql
+	akura2.5/AKURA_TABLES.sql
+	akura2.5/AKURA_VIEWS.sql
+	akura2.5/AKURA_DEFAULT_DATA_USER_PRVILEGES.sql
+	akura2.5/SP_STUDENT_GAMIFICATION_SEARCH.sql
+	akura2.6/AKURA_TABLES.sql
+	akura2.6/AKURA_VIEWS.sql
+	akura2.6/SP_STUDENT_GAMIFICATION_SEARCH.sql
+	akura2.6/AKURA_STUDENT_ADVANCE_SEARCH_SP.sql
+	akura2.6/AKURA_DEFAULT_DATA_USER_PRVILEGES.sql
+	akura2.6/AKURA_DEFAULT_DATA.sql
+	AKURA_TABLES.sql
+	AKURA_VIEWS.sql
+ 
+    The above scripts are only for new users. Existing users need to execute additional scripts to carry out data migrations.
+ 
+    Data migration from Àkura-0.9-alpha : Users who have filled `Religious Activities` should execute the following script. Dummy records have been added to the `GRADING' table and set as default value for the `GRADING_ID` in `FAITH_LIFE_RATING` table.  
+   
+        beta1.1/FAITH_LIFE_FIX.sql
+
+    Data fixes (Àkura-2.0 or previous versions): Before executing the upgrade scripts it is mandatory to execute the following script:  
+
+        STUDENT_PARENT_DUPLICATES_REMOVAL_FIX.sql
+
+    Data fixes (Àkura-2.1 or previous versions): Before executing the upgrade scripts it is mandatory to execute the following script:  
+
+        FOREIGN_KEY_FIX.sql
+
+    Data fixes (Àkura-2.2 or previous versions): Before executing the upgrade scripts it is mandatory to execute the following script:  
+
+        USER_LOGIN_DATA_MIGRATION.sql
+ 
+ 
+10. How do I configure Gmail to send email?
+ 
+    Make the following changes in the `akura-common-beans-main.xml` file.
+    
+   I. Find the `javaMailSender` bean element and add the following property.
+     
+    <bean id="javaMailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl" >
+        <property name="javaMailProperties">
+                <props>
+                    <!-- Enable SMTP authontication -->
+                        <prop key="mail.smtp.auth">true</prop> 
+             
+                <!-- Use TLS to encrypt communication with SMTP server -->
+                        <prop key="mail.smtp.starttls.enable">true</prop>
+ 
+                <!-- if you are using SSL you need to uncomment the following property file. -->
+                        <!-- <prop key="mail.smtp.ssl.enable">true</prop> -->
+                </props>
+        </property> 
+    </bean>
+     
+  II. The port for TLS/STARTTLS is 587 and the port for SSL is 465. You have to set this port in the `email.properties` file.
+
+11. I deployed Àkura in Tomcat 6 and some JSPs. Why am I'm getting errors?
+
+    -It is recommended that you use Tomcat 7 with Àkura because some JSTL functions work only in Tomcat 7.
+ 

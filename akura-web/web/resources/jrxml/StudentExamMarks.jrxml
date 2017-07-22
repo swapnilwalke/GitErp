@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="StudentTermMarks" language="groovy" pageWidth="595" pageHeight="842" columnWidth="595" leftMargin="0" rightMargin="0" topMargin="0" bottomMargin="0" isFloatColumnFooter="true">
+	<property name="ireport.zoom" value="1.4641000000000215"/>
+	<property name="ireport.x" value="26"/>
+	<property name="ireport.y" value="0"/>
+	<template><![CDATA[$P{STYLE_TEMPLATE}]]></template>
+	<parameter name="STYLE_TEMPLATE" class="java.lang.String"/>
+	<parameter name="exam_marks_title" class="java.lang.String"/>
+	<parameter name="exam_subject_label" class="java.lang.String"/>
+	<parameter name="mark_grade_label" class="java.lang.String"/>
+	<parameter name="exam_name_label" class="java.lang.String"/>
+	<parameter name="year_label" class="java.lang.String"/>
+	<parameter name="index_no_label" class="java.lang.String"/>
+	<parameter name="GPLComment" class="java.lang.String"/>
+	<field name="year" class="java.util.Date"/>
+	<field name="examDescription" class="java.lang.String"/>
+	<field name="examAdmissionNo" class="java.lang.String"/>
+	<field name="subjectDescription" class="java.lang.String"/>
+	<field name="marks" class="java.lang.Float"/>
+	<field name="gradingAcronym" class="java.lang.String"/>
+	<field name="gradingDescription" class="java.lang.String"/>
+	<field name="absent" class="java.lang.Boolean"/>
+	<field name="markType" class="java.lang.Boolean"/>
+	<group name="year">
+		<groupExpression><![CDATA[$F{year}]]></groupExpression>
+	</group>
+	<group name="description">
+		<groupExpression><![CDATA[$F{examDescription}]]></groupExpression>
+		<groupHeader>
+			<band height="101">
+				<line>
+					<reportElement x="76" y="76" width="306" height="1"/>
+				</line>
+				<line>
+					<reportElement x="382" y="76" width="1" height="24"/>
+				</line>
+				<line>
+					<reportElement x="76" y="13" width="307" height="1"/>
+				</line>
+				<line>
+					<reportElement x="76" y="14" width="1" height="62"/>
+				</line>
+				<line>
+					<reportElement x="382" y="14" width="1" height="62"/>
+				</line>
+				<line>
+					<reportElement x="77" y="100" width="306" height="1"/>
+				</line>
+				<textField>
+					<reportElement style="Text_and_ash_bg" x="77" y="77" width="177" height="23"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{exam_subject_label}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="76" y="77" width="1" height="24"/>
+				</line>
+				<textField>
+					<reportElement style="Text_and_ash_bg" x="255" y="77" width="127" height="23"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{mark_grade_label}]]></textFieldExpression>
+				</textField>
+				<line>
+					<reportElement x="254" y="77" width="1" height="24"/>
+				</line>
+				<textField>
+					<reportElement x="210" y="14" width="151" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{examDescription}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="210" y="33" width="151" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$F{examAdmissionNo}]]></textFieldExpression>
+				</textField>
+				<textField pattern="yyyy">
+					<reportElement x="211" y="52" width="152" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.util.Date"><![CDATA[$F{year}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="79" y="52" width="132" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{year_label}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="79" y="33" width="132" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{index_no_label}]]></textFieldExpression>
+				</textField>
+				<textField>
+					<reportElement x="79" y="14" width="132" height="20"/>
+					<textElement/>
+					<textFieldExpression class="java.lang.String"><![CDATA[$P{exam_name_label}]]></textFieldExpression>
+				</textField>
+			</band>
+		</groupHeader>
+		<groupFooter>
+			<band height="10"/>
+		</groupFooter>
+	</group>
+	<group name="indexNo">
+		<groupExpression><![CDATA[$F{examAdmissionNo}]]></groupExpression>
+	</group>
+	<title>
+		<band height="25" splitType="Stretch">
+			<textField>
+				<reportElement style="Frame_color" x="76" y="3" width="430" height="20" forecolor="#FFFFFF"/>
+				<textElement>
+					<font size="12" isBold="false"/>
+				</textElement>
+				<textFieldExpression class="java.lang.String"><![CDATA[$P{exam_marks_title}]]></textFieldExpression>
+			</textField>
+		</band>
+	</title>
+	<detail>
+		<band height="22" splitType="Stretch">
+			<line>
+				<reportElement x="76" y="21" width="307" height="1"/>
+			</line>
+			<line>
+				<reportElement x="76" y="0" width="1" height="21"/>
+			</line>
+			<line>
+				<reportElement x="254" y="0" width="1" height="21"/>
+			</line>
+			<line>
+				<reportElement x="382" y="0" width="1" height="22"/>
+			</line>
+			<textField isBlankWhenNull="true">
+				<reportElement x="258" y="1" width="125" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[( $F{absent} ? "AB" : ( $F{markType} ? $F{marks} :($F{gradingAcronym} == null ? "" : ( $F{gradingAcronym})+"    "+$F{gradingDescription}) ))]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="79" y="1" width="175" height="20"/>
+				<textElement/>
+				<textFieldExpression class="java.lang.String"><![CDATA[$F{subjectDescription}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>
